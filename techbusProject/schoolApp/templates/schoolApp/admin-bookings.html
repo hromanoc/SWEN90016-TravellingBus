@@ -1,0 +1,53 @@
+{% extends 'schoolApp/admin-main.html' %} 
+{% block content %}
+
+<br />
+
+<div class="row">
+	<div class="col-md">
+		<div class="card card-body">
+			<h5>Bookings</h5>
+		</div>
+		<br />
+		<div class="card card-body">
+			<table class="table">
+				<tr>
+					<th>School</th>
+					<th>Expression Accepted on</th>
+					<th>Start Date</th>
+					<th>End Date</th>
+					<th>Status</th>
+				</tr>
+				{% for booking in bookings %}
+				<tr>
+					<td>{{booking.expression.school.school_name}}</td>
+					<td>{{booking.date_created}}</td>
+					<td>{{booking.start_date}}</td>
+					<td>{{booking.end_date}}</td>
+					{% if booking.status == "Reserved" %}
+					<td>
+						<a class="btn btn-sm btn-success disabled"
+							>{{booking.status}}</a
+						>
+					</td>
+					{% elif booking.status == "Pending" %}
+					<td>
+						<a class="btn btn-sm btn-warning disabled"
+							>{{booking.status}}</a
+						>
+					</td>
+					{% elif booking.status == "Cancelled" %}
+					<td>
+						<a class="btn btn-sm btn-secondary disabled"
+							>{{booking.status}}</a
+						>
+					</td>
+					{% endif %}
+				</tr>
+				{% endfor %}
+			</table>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
