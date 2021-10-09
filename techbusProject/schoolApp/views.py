@@ -1,10 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
-from django.http import HttpResponse
+
 from django.shortcuts import redirect, render
-from django.contrib.auth.models import Group
+
 from django.template.loader import get_template
 from django.core.mail import EmailMultiAlternatives
 
@@ -60,4 +58,76 @@ def school_login(request):
 
     return render(request, "schoolApp/school-login.html", data)
 
+#####################
+# AUTO EMAILS 
+#####################
+
+
+def send_email_expression(email, expression):
+    """Send an email after an expression is created
+
+    :param email: email of the administrator
+    :type email: string
+    :param expression: An expression of interest
+    :type expression: Expression
+    """
+    template = get_template("schoolApp/admin-email-expression.html")
+    data = {"email": email, "expression": expression}
+    content = template.render(data)
+
+    email = EmailMultiAlternatives(
+        "🚌 A New Expression of Interest! 🚌",
+        "Travelling Technology Bus",
+        ADMIN_EMAIL,
+        [email],
+    )
+
+    email.attach_alternative(content, "text/html")
+    email.send()
+
+
+def send_email_expression_confirmation(email, expression):
+    """Send an email to a school representative after an expression is confirmed
+
+    :param email: email of the administrator
+    :type email: string
+    :param expression: An expression of interest
+    :type expression: Expression
+    """
+    template = get_template("schoolApp/admin-email-expression-confirmation.html")
+    data = {"expression": expression}
+    content = template.render(data)
+
+    email = EmailMultiAlternatives(
+        "🚌 Expression of Interest has been confirmed! 🚌",
+        "Travelling Technology Bus",
+        ADMIN_EMAIL,
+        [email],
+    )
+
+    email.attach_alternative(content, "text/html")
+    email.send()
+
+
+def send_email_booking_cancellation(email, booking):
+    """Send an email after a booking has been cancelled
+
+    :param email: email of the user
+    :type email: string
+    :param booking: A school's booking
+    :type booking: string
+    """
+    template = get_template("schoolApp/admin-email-booking-cancellation.html")
+    data = {"booking": booking}
+    content = template.render(data)
+
+    email = EmailMultiAlternatives(
+        "🚨🚌 A Booking has been cancelled =(! 🚌🚨",
+        "Travelling Technology Bus",
+        ADMIN_EMAIL,
+        [email],
+    )
+
+    email.attach_alternative(content, "text/html")
+    email.send()
 
