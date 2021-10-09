@@ -1,0 +1,62 @@
+{% extends 'schoolApp/admin-main.html' %} 
+
+{% block content %}
+
+<br>
+
+<div class="row">
+	<div class="col-md-5">
+		<h5>EXPRESSION OF INTERESTS:</h5>
+		<hr>
+		<div class="card card-body">
+			<a class="btn btn-primary  btn-sm btn-block" href="{% url 'admin-expressions' %}">Expressions of Interests</a>
+			<table class="table table-sm">
+				<tr>
+					<th>Name of the School</th>
+					<th>School Type</th>
+				</tr>
+				{% for expression in  expressions %}
+					<tr>
+					<td><a href="{% url 'admin-expression-detail' expression.acceptance_id%}">{{expression.school.school_name}}</a></td>
+					<td>{{expression.school_type}}</td>
+					</tr>
+				{% endfor %}
+			</table>
+		</div>
+	</div>
+
+	<div class="col-md-7">
+		<h5>BOOKINGS:</h5>
+		<hr>
+		<div class="card card-body">
+			<a class="btn btn-primary  btn-sm btn-block" href="{% url 'admin-bookings' %}">Bookings</a>
+			<table class="table table-sm">
+				<tr>
+					<th>School</th>
+					<th>Expression Accepted on</th>
+					<th>Start Date</th>
+					<th>End Date</th>
+					<th>Status</th>
+				</tr>
+				{% for booking in  bookings %}
+					<tr>
+						<td>{{booking.expression.school.school_name}}</td>
+						<td>{{booking.date_created}}</td>
+						<td>{{booking.start_date}}</td>
+						<td>{{booking.end_date}}</td>
+						{% if booking.status == "Reserved" %}
+						<td><a class="btn btn-sm btn-success disabled">{{booking.status}}</a></td>
+						{% elif booking.status == "Pending" %}
+						<td><a class="btn btn-sm btn-warning disabled">{{booking.status}}</a></td>
+						{% elif booking.status == "Cancelled" %}
+						<td><a class="btn btn-sm btn-secondary disabled">{{booking.status}}</a></td>
+						{% endif %}
+					</tr>
+				{% endfor %}
+			</table>
+		</div>
+	</div>
+
+</div>
+
+{% endblock %}
