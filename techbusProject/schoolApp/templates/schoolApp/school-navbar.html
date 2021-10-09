@@ -1,0 +1,34 @@
+{% load static %}
+
+<style>
+  .hello-msg{
+    font-size: 18px;
+    color: #fff;
+    margin-right: 20px;
+  }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-success">
+    <div class="container-fluid">
+      <img src="{% static 'images/Logo-1.png' %}" alt="">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" href="{% url 'school-dashboard'%}">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'school-expressions'%}">Expressions of Interest</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'school-bookings'%}">Bookings</a>
+          </li>
+        </ul>
+      </div>
+      <span class="hello-msg">Hello, {{request.user}}</span>
+      <span ><a  class="hello-msg" href="{% url 'logout' %}">Logout</a></span>
+    
+    </div>
+  </nav>
