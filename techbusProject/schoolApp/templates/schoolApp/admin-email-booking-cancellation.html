@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Travelling Tech Bus</title>
+	</head>
+	<body>
+		<h1>
+			Hi Admin! A Booking has been cancelled with the following details:
+		</h1>
+		<h3>
+			<li>
+				Expression of Interest Acceptance ID:
+				{{booking.expression.acceptance_id}}
+			</li>
+			<li>School Name: {{booking.expression.school.school_name}}</li>
+			<li>School Type: {{booking.expression.school_type}}</li>
+			<li>Start Date: {{booking.start_date}}</li>
+			<li>End Date: {{booking.end_date}}</li>
+			<li>
+				Participate in Specialized Activities?:
+				{{booking.special_activity}}
+			</li>
+			<li>
+				Total Students Participating:
+				{{booking.total_students}}
+			</li>
+			<li>Cost Per Student: ${{booking.cost_per_person}}.00</li>
+			<li>Total Cost: ${{booking.total_cost}}.00</li>
+			<li>
+				Reason for Cancellation:
+				{{booking.reason_cancellation}}
+			</li>
+		</h3>
+		<p>This message has been sent from our Django Server</p>
+	</body>
+</html>

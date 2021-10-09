@@ -1,0 +1,153 @@
+{% extends 'schoolApp/admin-main.html' %} {% block content %}
+
+<div class="row">
+	<div class="col-md">
+		<br />
+		<div class="card card-body">
+			<h5>Expression of Interest Details</h5>
+			<hr />
+			<li>
+				Expression of Interest Acceptance ID:
+				{{expression.acceptance_id}}
+			</li>
+			<li>Email: {{expression.school.user.username}}</li>
+			<li>Phone: {{expression.school.contact_number}}</li>
+		</div>
+	</div>
+	<div class="col-md">
+		<br />
+		<div class="card card-body">
+			<h5>Message</h5>
+			<hr />
+			<p>{{expression.message}}</p>
+		</div>
+	</div>
+</div>
+<br />
+
+<div class="row">
+	<div class="col-md">
+		<div class="card card-body">
+			<table class="table table-sm">
+				<tr>
+					<th>School Name</th>
+					<th>School Type</th>
+					<th>Start Date</th>
+					<th>End Date</th>
+					<th>Status</th>
+					<th>Response</th>
+				</tr>
+				<tr>
+					<form
+						action=""
+						onsubmit="return validate_dates()"
+						method="post"
+					>
+						{% csrf_token %}
+						<td>{{expression.school.school_name}}</td>
+						<td>{{expression.school_type}}</td>
+						{% if expression.suggested_start_date %}
+						<td>
+							<input
+								type="date"
+								class="form-control form-control-sm"
+								id="suggested_start_date"
+								name="suggested_start_date"
+								placeholder=""
+								value="{{expression.suggested_start_date|date:'Y-m-d' }}"
+								disabled
+							/>
+						</td>
+						<td>
+							<input
+								type="date"
+								class="form-control form-control-sm"
+								id="suggested_end_date"
+								name="suggested_end_date"
+								placeholder=""
+								value="{{expression.suggested_end_date|date:'Y-m-d' }}"
+								disabled
+							/>
+						</td>
+						<td>{{expression.status}}</td>
+						<td>
+							<button
+								type="submit"
+								class="btn btn-sm btn-secondary"
+								disabled
+							>
+								Confirmed
+							</button>
+						</td>
+						{% else %}
+						<td>
+							<input
+								type="date"
+								class="form-control form-control-sm"
+								id="suggested_start_date"
+								name="suggested_start_date"
+								placeholder=""
+								value="{{expression.suggested_start_date|date:'Y-m-d' }}"
+								onchange="validate_dates()"
+								required
+							/>
+						</td>
+						<td>
+							<input
+								type="date"
+								class="form-control form-control-sm"
+								id="suggested_end_date"
+								name="suggested_end_date"
+								placeholder=""
+								value="{{expression.suggested_end_date|date:'Y-m-d' }}"
+								onchange="validate_dates()"
+								required
+							/>
+						</td>
+						<td>{{expression.status}}</td>
+						<td>
+							<button
+								type="submit"
+								class="btn btn-sm btn-success"
+							>
+								Confirm
+							</button>
+						</td>
+						{% endif %}
+					</form>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+
+<script>
+	function validate_dates() {
+		suggested_start_date = document.getElementById(
+			'suggested_start_date'
+		).value;
+		suggested_end_date =
+			document.getElementById('suggested_end_date').value;
+
+		var d1 = new Date(suggested_start_date);
+		var d2 = new Date(suggested_end_date);
+
+		total_days_diff = Math.ceil((d2 - d1) / (1000 * 60 * 60 * 24));
+
+		if (total_days_diff > 60) {
+			alert(
+				`DIFFERENCE BETWEEN DAYS IS MORE THAN 60 DAYS: ${total_days_diff}. PLEASE: Select a difference less than two months (60 days)`
+			);
+			return false;
+		} else if (total_days_diff <= 0) {
+			alert(
+				`PLEASE THE END DATE SHOULD BE GREATER THAN THE START DATE. SELECT AGAIN.`
+			);
+			return false;
+		} else if (total_days_diff > 0 && total_days_diff <= 60) {
+			return true;
+		}
+	}
+</script>
+
+{% endblock %}

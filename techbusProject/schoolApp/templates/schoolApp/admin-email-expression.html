@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Hi Admin! A new Expression of Interest has come for scheduling!</h1>
+    <h3>
+        <li>School Name: {{ expression.school.school_name }}</li>
+        <li>Address: {{ expression.address }}</li>
+        <li>School Type: {{ expression.school_type }}</li>
+        <li>Message: {{ expression.message }}</li>
+    </h3>
+    <p>
+        This message has been sent from our Django Server
+    </p>
+</body>
+</html>
