@@ -1,8 +1,11 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.http import HttpResponse
 
 from django.shortcuts import redirect, render
-
+from django.contrib.auth.models import Group
 from django.template.loader import get_template
 from django.core.mail import EmailMultiAlternatives
 
@@ -130,4 +133,93 @@ def send_email_booking_cancellation(email, booking):
 
     email.attach_alternative(content, "text/html")
     email.send()
+#####################
+# Admin's Views
+#####################
+
+
+@login_required(login_url="login")
+@admin_only
+def admin_dashboard(request):
+    """Render the admin dashboard page for an admin user.
+
+    :param request: httprequest received
+    :type request: HttpRequest
+    :return: Return a HttpResponse whose content is filled with the result of the passed arguments.
+    :rtype: HttpResponse
+    """
+    expressions_list = Expressions.objects.all()
+    bookings_list = Booking.objects.all()
+
+    data = {"expressions": expressions_list, "bookings": bookings_list}
+
+    return render(request, "schoolApp/admin-dashboard.html", data)
+
+
+@login_required(login_url="login")
+@allowed_users(allowed_roles=["admin"])
+def admin_expressions(request):
+    """Render the admin expression of interests list page for an admin user.
+
+    :param request: httprequest received
+    :type request: HttpRequest
+    :return: Return a HttpResponse whose content is filled with the result of the passed arguments.
+    :rtype: HttpResponse
+    """
+    expressions_list = Expressions.objects.all()
+
+    data = {"expressions": expressions_list}
+
+    return render(request, "schoolApp/admin-expressions.html", data)
+
+
+@login_required(login_url="login")
+@allowed_users(allowed_roles=["admin"])
+def admin_expression_detail(request, pk_expression):
+    """Render the admin expression of interest details page for an admin user.
+
+    :param request: httprequest received
+    :type request: HttpRequest
+    :param pk_expression: Primary Key of an expression of interest
+    :type pk_expression: int
+    :return: Return a HttpResponse whose content is filled with the result of the passed arguments
+    :rtype: HttpResponse
+    """
+    expression = Expressions.objects.get(acceptance_id=pk_expression)
+    form = ExpressionForm(instance=expression)
+
+    if request.method == "POST":
+        expression.status = "Accepted"
+        form = ExpressionForm(request.POST, instance=expression)
+        if form.is_valid():
+            form.save()
+
+            new_booking = Booking(expression=expression, status="Pending")
+            new_booking.save()
+
+            school_email = expression.school.user.username
+            send_email_expression_confirmation(school_email, expression)
+
+            return redirect(request.path_info)
+
+    data = {"expression": expression, "form": form}
+
+    return render(request, "schoolApp/admin-expression-detail.html", data)
+
+
+@login_required(login_url="login")
+@allowed_users(allowed_roles=["admin"])
+def admin_bookings(request):
+    """Render the admin bookings list page for an admin user.
+
+    :param request: httprequest received
+    :type request: HttpRequest
+    :return: Return a HttpResponse whose content is filled with the result of the passed arguments.
+    :rtype: HttpResponse
+    """
+    bookings_list = Booking.objects.all()
+
+    data = {"bookings": bookings_list}
+
+    return render(request, "schoolApp/admin-bookings.html", data)
 
