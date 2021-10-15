@@ -1,0 +1,74 @@
+{% extends 'schoolApp/school-main.html' %} {% block content %}
+
+<br />
+
+<div class="row">
+	<h5>Expression of Interest Acceptance ID: {{expression.acceptance_id}}</h5>
+	<hr />
+
+	<div class="col-md">
+		<div class="card card-body">
+			<h5>Contact Information</h5>
+			<hr />
+			<p>Email: {{expression.school.user.username}}</p>
+			<p>Phone: {{expression.school.contact_number}}</p>
+		</div>
+	</div>
+</div>
+
+<br />
+<div class="row">
+	<div class="col">
+		<div class="card card-body">
+			<h5>Message</h5>
+			<hr />
+			<p>{{expression.message}}</p>
+		</div>
+	</div>
+</div>
+<br />
+
+<div class="row">
+	<div class="col-md">
+		<div class="card card-body">
+			<table class="table table-sm">
+				<tr>
+					<th>School Name</th>
+					<th>School Type</th>
+					<th>Start Date</th>
+					<th>End Date</th>
+					<th>Status</th>
+				</tr>
+				<tr>
+					<td>{{expression.school.school_name}}</td>
+					<td>{{expression.school_type}}</td>
+					<td>
+						<input
+							type="date"
+							class="form-control form-control-sm"
+							id="suggested_start_date"
+							name="suggested_start_date"
+							placeholder=""
+							value="{{expression.suggested_start_date|date:'Y-m-d' }}"
+							disabled
+						/>
+					</td>
+					<td>
+						<input
+							type="date"
+							class="form-control form-control-sm"
+							id="suggested_end_date"
+							name="suggested_end_date"
+							placeholder=""
+							value="{{expression.suggested_end_date|date:'Y-m-d' }}"
+							disabled
+						/>
+					</td>
+					<td>{{expression.status}}</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

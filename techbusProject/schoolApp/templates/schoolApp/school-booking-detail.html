@@ -1,0 +1,252 @@
+{% extends 'schoolApp/school-main.html' %} {% block content %}
+
+<br />
+
+<div class="row">
+	<div class="col-md">
+		<div class="card card-body">
+			<h5>
+				Expression of Interest Acceptance ID:
+				{{expression.acceptance_id}}
+			</h5>
+			<hr />
+			<p>School Name: {{expression.school.school_name}}</p>
+			<p>School Type: {{expression.school_type}}</p>
+			<li>
+				Time Window permitted:
+				<ul>
+					<li>
+						Start Date:
+						{{expression.suggested_start_date|date:'Y-m-d' }}
+					</li>
+					<li>
+						End Date: {{expression.suggested_end_date|date:'Y-m-d'}}
+					</li>
+				</ul>
+			</li>
+		</div>
+	</div>
+
+	<div class="col-md">
+		<div class="card card-body">
+			<h5>Booking Details</h5>
+			<hr />
+			<p>
+				Please, be sure to select your Start Date and End Date according
+				to the following:
+			</p>
+			<ul>
+				<li>
+					Time Window permitted:
+					<ul>
+						<li>
+							Start Date:
+							{{expression.suggested_start_date|date:'Y-m-d' }}
+						</li>
+						<li>
+							End Date:
+							{{expression.suggested_end_date|date:'Y-m-d' }}
+						</li>
+					</ul>
+				</li>
+				<li>
+					The difference between Start Date and End Date
+					<ul>
+						<li>Shall be at-least 1 week</li>
+						<li>Shall be no more than 3 weeks</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<br />
+
+<div class="row">
+	<div class="col-md">
+		<div class="card card-body">
+			<table class="table table-sm">
+				<tr>
+					<th>School Name</th>
+					<th>Start Date</th>
+					<th>End Date</th>
+					<th>Specialized Activities Needed?</th>
+					<th>Total Students Participating</th>
+					<th>Cost Per Student</th>
+					<th>Total Cost</th>
+					<th>Response</th>
+				</tr>
+				<tr>
+					<form
+						action=""
+						onsubmit="return validate_dates()"
+						method="post"
+					>
+						{% csrf_token %}
+						<td>{{expression.school.school_name}}</td>
+						{% if booking.status == "Reserved" %}
+						<td>
+							<input
+								type="date"
+								class="form-control form-control-sm"
+								id="id_start_date"
+								name="start_date"
+								placeholder=""
+								value="{{booking.start_date|date:'Y-m-d' }}"
+								disabled
+							/>
+						</td>
+						<td>
+							<input
+								type="date"
+								class="form-control form-control-sm"
+								id="id_end_date"
+								name="end_date"
+								placeholder=""
+								value="{{booking.end_date|date:'Y-m-d' }}"
+								disabled
+							/>
+						</td>
+						{% if booking.special_activity %}
+						<td>Yes</td>
+						{% else %}
+						<td>No</td>
+						{% endif %}
+						<td>{{booking.total_students}}</td>
+						<td>${{booking.cost_per_person}}.00</td>
+						{% if booking.total_cost %}
+						<td>${{booking.total_cost}}.00</td>
+						{% else %}
+						<td>$00.00</td>
+						{% endif %}
+						<td>
+							<button
+								type="submit"
+								class="btn btn-sm btn-secondary"
+								disabled
+							>
+								Confirmed
+							</button>
+						</td>
+						{% else %}
+						<td>
+							<input
+								type="date"
+								class="form-control form-control-sm"
+								id="id_start_date"
+								name="start_date"
+								placeholder=""
+								value="{{expression.suggested_start_date|date:'Y-m-d' }}"
+								min="{{expression.suggested_start_date|date:'Y-m-d' }}"
+								max="{{expression.suggested_end_date|date:'Y-m-d' }}"
+								onchange="validate_dates()"
+								required
+							/>
+						</td>
+						<td>
+							<input
+								type="date"
+								class="form-control form-control-sm"
+								id="id_end_date"
+								name="end_date"
+								placeholder=""
+								value="{{expression.suggested_end_date|date:'Y-m-d' }}"
+								min="{{expression.suggested_start_date|date:'Y-m-d' }}"
+								max="{{expression.suggested_end_date|date:'Y-m-d' }}"
+								onchange="validate_dates()"
+								required
+							/>
+						</td>
+						<td>{{form.special_activity}}</td>
+						<td>{{form.total_students}}</td>
+						<td>
+							<input
+								type="number"
+								class="form-control form-control-sm"
+								id="id_cost_per_person"
+								name="cost_per_person"
+								placeholder=""
+								value="{{booking.cost_per_person}}"
+								disabled
+							/>
+						</td>
+						<td>{{form.total_cost}}</td>
+						<td>
+							<button
+								type="submit"
+								class="btn btn-sm btn-success"
+							>
+								Confirm
+							</button>
+						</td>
+						{% endif %}
+					</form>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+
+<script>
+	function myFunction() {
+		var price = document.getElementById('id_cost_per_person').value;
+		var total_students = document.getElementById('id_total_students').value;
+		var total_cost = +price * +total_students;
+		document.getElementById('id_total_cost').value = total_cost;
+	}
+
+	function EnableDisableTextBox(special_activity) {
+		var selectedValue =
+			special_activity.options[special_activity.selectedIndex].value;
+
+		var total_students = document.getElementById('id_total_students');
+
+		total_students.disabled = selectedValue == 'True' ? false : true;
+		total_students.value = 0;
+		myFunction();
+
+		if (!total_students.disabled) {
+			total_students.focus();
+			total_students.required = true;
+		}
+	}
+
+	window.addEventListener(
+		'load',
+		function () {
+			var special_activity = document.getElementById(
+				'id_special_activity'
+			);
+
+			EnableDisableTextBox(special_activity);
+		},
+		false
+	);
+
+	function validate_dates() {
+		id_start_date = document.getElementById('id_start_date').value;
+		id_end_date = document.getElementById('id_end_date').value;
+
+		var d1 = new Date(id_start_date);
+		var d2 = new Date(id_end_date);
+
+		total_days_diff = Math.ceil((d2 - d1) / (1000 * 60 * 60 * 24));
+
+		if (total_days_diff < 7 || total_days_diff > 21) {
+			alert(
+				`PLEASE SELECT A TIME PERIOD BETWEEN 01 WEEK OR 03 WEEKS: ${total_days_diff} DAY(S) WERE SELECTED.`
+			);
+			return false;
+		} else if (total_days_diff <= 0) {
+			alert(
+				`PLEASE THE END DATE SHOULD BE GREATER THAN THE START DATE. SELECT AGAIN.`
+			);
+			return false;
+		} else if (total_days_diff >= 7 && total_days_diff <= 21) {
+			return true;
+		}
+	}
+</script>
+
+{% endblock %}

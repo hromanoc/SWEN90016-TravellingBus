@@ -1,0 +1,116 @@
+{% extends 'schoolApp/school-main.html' %} {% block content %}
+
+<br />
+
+<div class="row">
+	<div class="col-md-12">
+		<h5>EXPRESSION OF INTERESTS:</h5>
+		<hr />
+		<div class="card card-body">
+			<table class="table table-sm">
+				<tr>
+					<th>Name of the School</th>
+					<th>School Type</th>
+				</tr>
+				{% if expressions %} {% for expression in expressions %}
+				<tr>
+					<td>
+						<a
+							href="{% url 'school-expression-detail' expression.acceptance_id%}"
+							>{{expression.school.school_name}}</a
+						>
+					</td>
+					<td>{{expression.school_type}}</td>
+				</tr>
+				{% endfor %} {% else %}
+				<p>No expression of interest has been submitted</p>
+				{% endif %}
+			</table>
+
+			<a class="btn btn-success btn-sm btn-block" href="{% url 'school-create-expression' school_id%}"
+				>Register a new Expression of Interest</a
+			>
+		</div>
+	</div>
+</div>
+<br />
+<div class="row">
+	<div class="col-md-12">
+		<h5>BOOKINGS:</h5>
+		<hr />
+		<div class="card card-body">
+			<table class="table table-sm">
+				<tr>
+					<th>School</th>
+					<th>Expression Accepted on</th>
+					<th>Start Date</th>
+					<th>End Date</th>
+					<th>Status</th>
+					<th>Action</th>
+					<th>Cancel</th>
+				</tr>
+				{% if bookings %} 
+				{% for booking in bookings %}
+				<tr>
+					<td>{{booking.expression.school.school_name}}</td>
+					<td>{{booking.date_created}}</td>
+					<td>{{booking.start_date}}</td>
+					<td>{{booking.end_date}}</td>
+					{% if booking.status == "Reserved" %}
+					<td>
+						<a class="btn btn-sm btn-success disabled"
+							>{{booking.status}}</a
+						>
+					</td>
+					<td>
+						<a class="btn btn-sm btn-warning disabled" href="{% url 'school-booking-detail' booking.id%}"
+							>Select Schedule</a
+						>
+					</td>
+					<td>
+						<a class="btn btn-sm btn-danger" href="{% url 'school-booking-cancel' booking.id%}"
+							>Cancel Booking</a
+						>
+					</td>
+					{% elif booking.status == "Pending" %}
+					<td>{{booking.status}}</td>
+					<td>
+						<a class="btn btn-sm btn-warning" href="{% url 'school-booking-detail' booking.id%}"
+							>Select Schedule</a
+						>
+					</td>
+					<td>
+						<a class="btn btn-sm btn-secondary disabled"
+							>Cancel Booking</a
+						>
+					</td>
+					{% elif booking.status == "Cancelled" %}
+					<td>
+						<a class="btn btn-sm btn-danger disabled"
+							>Booking was {{booking.status}}</a
+						>
+					</td>
+					<td>
+						<a class="btn btn-sm btn-warning disabled" href="{% url 'school-booking-detail' booking.id%}"
+							>Select Schedule</a
+						>
+					</td>
+					<td>
+						<a class="btn btn-sm btn-secondary disabled"
+							>Cancel Booking</a
+						>
+					</td>
+					{% endif %}
+				</tr>
+				{% endfor %} {% else %}
+				<p>No booking was confirmed</p>
+				{% endif %}
+			</table>
+		</div>
+	</div>
+</div>
+{% for message in messages %}
+<p id="messages">{{message}}</p>
+{% endfor %}
+
+{% endblock %}

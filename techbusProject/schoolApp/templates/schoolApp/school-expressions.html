@@ -1,0 +1,31 @@
+{% extends 'schoolApp/school-main.html' %} 
+
+{% block content %}
+
+<br />
+
+<div class="row">
+	<div class="col-md">
+		<div class="card card-body">
+			<h5>Expression of Interests</h5>
+		</div>
+        <br>
+		<div class="card card-body">
+			<table class="table">
+				<tr>
+					<th>Name of the School</th>
+					<th>School Type</th>
+				</tr>
+				{% for expression in  expressions %}
+					<tr>
+					<td><a href="{% url 'school-expression-detail' expression.acceptance_id%}">{{expression.school.school_name}}</a></td>
+					<td>{{expression.school_type}}</td>
+					</tr>
+				{% endfor %}
+
+			</table>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

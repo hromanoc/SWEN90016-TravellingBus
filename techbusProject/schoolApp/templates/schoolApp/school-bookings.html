@@ -1,0 +1,84 @@
+{% extends 'schoolApp/school-main.html' %} 
+{% block content %}
+
+<br />
+
+<div class="row">
+	<div class="col-md">
+		<div class="card card-body">
+			<h5>Bookings</h5>
+		</div>
+		<br />
+		<div class="card card-body">
+			<table class="table">
+				<tr>
+					<th>School</th>
+					<th>Expression Accepted on</th>
+					<th>Start Date</th>
+					<th>End Date</th>
+					<th>Status</th>
+					<th>Action</th>
+					<th>Cancel</th>
+				</tr>
+				{% if bookings %} 
+				{% for booking in bookings %}
+				<tr>
+					<td>{{booking.expression.school.school_name}}</td>
+					<td>{{booking.date_created}}</td>
+					<td>{{booking.start_date}}</td>
+					<td>{{booking.end_date}}</td>
+					{% if booking.status == "Reserved" %}
+					<td>
+						<a class="btn btn-sm btn-success disabled"
+							>{{booking.status}}</a
+						>
+					</td>
+					<td>
+						<a class="btn btn-sm btn-warning disabled" href="{% url 'school-booking-detail' booking.id%}"
+							>Select Schedule</a
+						>
+					</td>
+					<td>
+						<a class="btn btn-sm btn-danger" href="{% url 'school-booking-cancel' booking.id%}"
+							>Cancel Booking</a
+						>
+					</td>
+					{% elif booking.status == "Pending" %}
+					<td>{{booking.status}}</td>
+					<td>
+						<a class="btn btn-sm btn-warning" href="{% url 'school-booking-detail' booking.id%}"
+							>Select Schedule</a
+						>
+					</td>
+					<td>
+						<a class="btn btn-sm btn-secondary disabled"
+							>Cancel Booking</a
+						>
+					</td>
+					{% elif booking.status == "Cancelled" %}
+					<td>
+						<a class="btn btn-sm btn-danger disabled"
+							>Booking was {{booking.status}}</a
+						>
+					</td>
+					<td>
+						<a class="btn btn-sm btn-warning disabled" href="{% url 'school-booking-detail' booking.id%}"
+							>Select Schedule</a
+						>
+					</td>
+					<td>
+						<a class="btn btn-sm btn-secondary disabled"
+							>Cancel Booking</a
+						>
+					</td>
+					{% endif %}
+				</tr>
+				{% endfor %} {% else %}
+				<p>No booking was confirmed</p>
+				{% endif %}
+			</table>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

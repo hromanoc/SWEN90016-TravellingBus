@@ -1,0 +1,167 @@
+{% extends 'schoolApp/school-main.html' %} {% load static %} {% block content %}
+
+<br />
+<div class="row">
+	<div class="col-md-6">
+		<div class="card card-body">
+			<p>
+				Are you sure you want to cancel Booking from
+				"{{booking.expression.school.school_name}}"?
+			</p>
+
+			<form
+				action="{% url 'school-booking-cancel' booking.id  %}"
+				method="POST"
+			>
+				{% csrf_token %}
+				<div class="row mb-3">
+					<label for="inputEmail3" class="col-sm-2 col-form-label"
+						>Expression of Interest Acceptance ID</label
+					>
+					<div class="col-sm-10">
+						<input
+							type="number"
+							class="form-control"
+							id="inputEmail3"
+							value="{{booking.expression.acceptance_id}}"
+							disabled
+						/>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<label for="inputEmail3" class="col-sm-2 col-form-label"
+						>School Name</label
+					>
+					<div class="col-sm-10">
+						<input
+							type="text"
+							class="form-control"
+							id="inputEmail3"
+							value="{{booking.expression.school.school_name}}"
+							disabled
+						/>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<label for="inputEmail3" class="col-sm-2 col-form-label"
+						>School Type</label
+					>
+					<div class="col-sm-10">
+						<input
+							type="text"
+							class="form-control"
+							id="inputEmail3"
+							value="{{booking.expression.school_type}}"
+							disabled
+						/>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<label for="inputEmail3" class="col-sm-2 col-form-label"
+						>Start Date</label
+					>
+					<div class="col-sm-10">
+						<input
+							type="text"
+							class="form-control"
+							id="inputEmail3"
+							value="{{booking.start_date|date:'d-m-Y'}}"
+							disabled
+						/>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<label for="inputEmail3" class="col-sm-2 col-form-label"
+						>End Date</label
+					>
+					<div class="col-sm-10">
+						<input
+							type="text"
+							class="form-control"
+							id="inputEmail3"
+							value="{{booking.end_date|date:'d-m-Y'}}"
+							disabled
+						/>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<label for="inputEmail3" class="col-sm-2 col-form-label"
+						>Participate in Specialized Activities?</label
+					>
+					<div class="col-sm-10">
+						<input
+							type="text"
+							class="form-control"
+							id="inputEmail3"
+							value="{{booking.special_activity}}"
+							disabled
+						/>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<label for="inputEmail3" class="col-sm-2 col-form-label"
+						>Total Students Participating</label
+					>
+					<div class="col-sm-10">
+						<input
+							type="number"
+							class="form-control"
+							id="inputEmail3"
+							value="{{booking.total_students}}"
+							disabled
+						/>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<label for="inputEmail3" class="col-sm-2 col-form-label"
+						>Cost Per Student</label
+					>
+					<div class="col-sm-10">
+						<input
+							type="text"
+							class="form-control"
+							id="inputEmail3"
+							value="{{booking.cost_per_person}}"
+							disabled
+						/>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<label for="inputEmail3" class="col-sm-2 col-form-label"
+						>Total Cost</label
+					>
+					<div class="col-sm-10">
+						<input
+							type="text"
+							class="form-control"
+							id="inputEmail3"
+							value="{{booking.total_cost}}"
+							disabled
+						/>
+					</div>
+				</div>
+				<div class="mb-3">
+					<label for="exampleFormControlTextarea1" class="form-label"
+						>Reason for Cancellation</label
+					>
+					<textarea
+						class="form-control"
+						id="exampleFormControlTextarea1"
+						rows="3"
+						name="reason_cancellation"
+						maxlength="250"
+						required
+						
+					></textarea>
+				</div>
+				<a class="btn btn-warning" href="{% url 'school-dashboard' %}"
+					>Cancel</a
+				>
+
+				<input class="btn btn-danger" type="submit" name="Confirm" />
+			</form>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

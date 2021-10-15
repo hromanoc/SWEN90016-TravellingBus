@@ -1,0 +1,160 @@
+{% extends 'schoolApp/school-main.html' %} {% block content %}
+
+<br />
+
+<div class="row">
+	<div class="col">
+		<div class="card card-body">
+			<h5>
+				Register an expression of interest for {{school.school_name }}
+			</h5>
+			<hr />
+			<form class="row g-3" method="POST">
+				{% csrf_token %}
+
+				<div class="col-12" hidden>
+					<label for="id_school_name" class="form-label"
+						>School Name</label
+					>
+					<input
+						type="text"
+						class="form-control"
+						id="id_school"
+						name="school"
+						value="{{school.id}}"
+					/>
+				</div>
+				<div class="col-12">
+					<label for="id_school_name_disabled" class="form-label"
+						>School Name</label
+					>
+					<input
+						type="text"
+						class="form-control"
+						id="id_school_name_disabled"
+						value="{{school.school_name}}"
+						disabled
+					/>
+				</div>
+				<div class="col-12">
+					<label for="id_address" class="form-label">Address</label>
+					{{form.address}}
+				</div>
+				<div class="col-md-6">
+					<label for="id_city" class="form-label">City</label>
+					{{form.city}}
+				</div>
+				<div class="col-md-4">
+					<label for="id_state" class="form-label">State</label>
+					{{form.state}}
+				</div>
+				<div class="col-md-2">
+					<label for="id_postal_code" class="form-label"
+						>Postal Code</label
+					>
+					{{form.postal_code}}
+				</div>
+				<div class="col-12">
+					<label for="id_school_type" class="form-label"
+						>School Type</label
+					>
+					{{form.school_type}}
+				</div>
+				<div class="col-md-4">
+					<label for="id_parking_present" class="form-label"
+						>Is Secure Parking Present?</label
+					>
+					{{form.parking_present}}
+				</div>
+				<div class="col-md-4">
+					<label for="id_total_spaces" class="form-label"
+						>Total Car Parking Space</label
+					>
+					{{form.total_spaces}}
+				</div>
+				<div class="col-md-4">
+					<label for="id_total_areas" class="form-label"
+						>Total Open Areas</label
+					>
+					{{form.total_areas}}
+				</div>
+				<div class="col-md-4">
+					<label for="id_visiting_school_name" class="form-label"
+						>Visiting School Name</label
+					>
+					{{form.visiting_school_name}}
+				</div>
+				<div class="col-md-4">
+					<label for="id_nearest_school_name" class="form-label"
+						>Nearest Host School Name</label
+					>
+					{{form.nearest_school_name}}
+				</div>
+				<div class="col-md-4">
+					<label for="id_distance_nearest_school" class="form-label"
+						>Distance from Nearest Host School (Km)</label
+					>
+					{{form.distance_nearest_school}}
+				</div>
+				<div class="mb-3">
+					<label for="id_message" class="form-label">Message</label>
+					{{form.message}}
+				</div>
+				<div class="col-12">
+					<button type="submit" class="btn btn-primary">
+						Submit
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<br />
+
+<script type="text/javascript">
+	function EnableDisableTextBox(school_type) {
+		var selectedValue =
+			school_type.options[school_type.selectedIndex].value;
+
+		var hosting_one = document.getElementById('id_parking_present');
+		var hosting_two = document.getElementById('id_total_spaces');
+		var hosting_three = document.getElementById('id_total_areas');
+
+		var visiting_one = document.getElementById('id_visiting_school_name');
+		var visiting_two = document.getElementById('id_nearest_school_name');
+		var visiting_three = document.getElementById(
+			'id_distance_nearest_school'
+		);
+
+		const hosting_options = [hosting_one, hosting_two, hosting_three];
+		const visiting_options = [visiting_one, visiting_two, visiting_three];
+
+		hosting_options.forEach(function (item, index) {
+			item.disabled = selectedValue == 'Hosting School' ? false : true;
+			if (!item.disabled) {
+				item.focus();
+				item.required = true;
+			}
+		});
+
+		visiting_options.forEach(function (item, index) {
+			item.disabled = selectedValue == 'Visiting School' ? false : true;
+			if (!item.disabled) {
+				item.focus();
+				item.required = true;
+			}
+		});
+	}
+
+	window.addEventListener(
+		'load',
+		function () {
+			var school_type = document.getElementById('id_school_type');
+
+			EnableDisableTextBox(school_type);
+		},
+		false
+	);
+</script>
+
+{% endblock %}
