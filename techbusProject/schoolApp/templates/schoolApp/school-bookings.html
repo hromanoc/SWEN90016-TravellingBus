@@ -1,45 +1,16 @@
-{% extends 'schoolApp/school-main.html' %} {% block content %}
+{% extends 'schoolApp/school-main.html' %} 
+{% block content %}
 
 <br />
 
 <div class="row">
-	<div class="col-md-12">
-		<h5>EXPRESSION OF INTERESTS:</h5>
-		<hr />
+	<div class="col-md">
 		<div class="card card-body">
-			<table class="table table-sm">
-				<tr>
-					<th>Name of the School</th>
-					<th>School Type</th>
-				</tr>
-				{% if expressions %} {% for expression in expressions %}
-				<tr>
-					<td>
-						<a
-							href="{% url 'school-expression-detail' expression.acceptance_id%}"
-							>{{expression.school.school_name}}</a
-						>
-					</td>
-					<td>{{expression.school_type}}</td>
-				</tr>
-				{% endfor %} {% else %}
-				<p>No expression of interest has been submitted</p>
-				{% endif %}
-			</table>
-
-			<a class="btn btn-success btn-sm btn-block" href="{% url 'school-create-expression' school_id%}"
-				>Register a new Expression of Interest</a
-			>
+			<h5>Bookings</h5>
 		</div>
-	</div>
-</div>
-<br />
-<div class="row">
-	<div class="col-md-12">
-		<h5>BOOKINGS:</h5>
-		<hr />
+		<br />
 		<div class="card card-body">
-			<table class="table table-sm">
+			<table class="table">
 				<tr>
 					<th>School</th>
 					<th>Expression Accepted on</th>
@@ -109,8 +80,5 @@
 		</div>
 	</div>
 </div>
-{% for message in messages %}
-<p id="messages">{{message}}</p>
-{% endfor %}
 
 {% endblock %}
