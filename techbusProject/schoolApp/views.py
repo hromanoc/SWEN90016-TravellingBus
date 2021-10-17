@@ -13,6 +13,9 @@ from .decorators import *
 from .forms import BookingForm, CreateScoolForm, ExpressionForm, CreateExpressionForm
 from .models import *
 
+from .date_search import *
+from datetime import date, datetime
+
 #####################
 # GLOBAL PARAMETERS
 #####################
@@ -97,6 +100,7 @@ def send_email_expression_confirmation(email, expression):
     :param expression: An expression of interest
     :type expression: Expression
     """
+
     template = get_template("schoolApp/admin-email-expression-confirmation.html")
     data = {"expression": expression}
     content = template.render(data)
@@ -167,7 +171,6 @@ def admin_expressions(request):
     :rtype: HttpResponse
     """
     expressions_list = Expressions.objects.all()
-
     data = {"expressions": expressions_list}
 
     return render(request, "schoolApp/admin-expressions.html", data)
@@ -191,15 +194,25 @@ def admin_expression_detail(request, pk_expression):
     if request.method == "POST":
         expression.status = "Accepted"
         form = ExpressionForm(request.POST, instance=expression)
-        if form.is_valid():
-            form.save()
+        
+        date_list = get_taken_expression_dates() ## get dates already scheduled
+        date_list.sort() #sort these
+        s_date = datetime.strptime(form['suggested_start_date'].value(), "%Y-%m-%d").date() # define start date
+        e_date = datetime.strptime(form['suggested_end_date'].value(), "%Y-%m-%d").date() # define end date
+        dates = date_between(s_date, e_date) # get dates between start and end date
+        is_taken = binary_search_dates(dates, date_list) # see if dates already taken
 
+        if form.is_valid() and not is_taken:
+            form.save()
             new_booking = Booking(expression=expression, status="Pending")
             new_booking.save()
 
             school_email = expression.school.user.username
             send_email_expression_confirmation(school_email, expression)
 
+            return redirect(request.path_info)
+        elif is_taken: 
+            # if taken refresh page for re input
             return redirect(request.path_info)
 
     data = {"expression": expression, "form": form}
